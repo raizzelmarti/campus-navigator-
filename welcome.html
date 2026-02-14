@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome | Smart Campus Navigator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* Black and Green Theme */
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0f2027 100%);
+    }
+    
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: blob-float 10s ease-in-out infinite;
+    }
+    
+    .blob-1 {
+      width: 400px;
+      height: 400px;
+      background: rgba(34, 197, 94, 0.15);
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+    
+    .blob-2 {
+      width: 350px;
+      height: 350px;
+      background: rgba(16, 185, 129, 0.12);
+      bottom: -80px;
+      right: -80px;
+      animation-delay: -3s;
+    }
+    
+    .blob-3 {
+      width: 280px;
+      height: 280px;
+      background: rgba(5, 150, 105, 0.1);
+      top: 50%;
+      left: 55%;
+      animation-delay: -5s;
+    }
+    
+    .blob-4 {
+      width: 200px;
+      height: 200px;
+      background: rgba(34, 197, 94, 0.08);
+      bottom: 30%;
+      left: 10%;
+      animation-delay: -7s;
+    }
+    
+    @keyframes blob-float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -40px) scale(1.1); }
+      66% { transform: translate(-30px, 30px) scale(0.9); }
+    }
+    
+    .title-glow {
+      text-shadow: 0 0 50px rgba(34, 197, 94, 0.5);
+      animation: glow-pulse 2.5s ease-in-out infinite;
+    }
+    
+    @keyframes glow-pulse {
+      0%, 100% { 
+        text-shadow: 0 0 50px rgba(34, 197, 94, 0.5), 0 0 100px rgba(34, 197, 94, 0.2); 
+      }
+      50% { 
+        text-shadow: 0 0 70px rgba(34, 197, 94, 0.7), 0 0 140px rgba(34, 197, 94, 0.3); 
+      }
+    }
+    
+    .feature-card {
+      animation: card-float 3.5s ease-in-out infinite;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      background: rgba(0, 0, 0, 0.4);
+    }
+    
+    .feature-card:nth-child(1) { animation-delay: 0s; }
+    .feature-card:nth-child(2) { animation-delay: 0.4s; }
+    .feature-card:nth-child(3) { animation-delay: 0.8s; }
+    .feature-card:nth-child(4) { animation-delay: 1.2s; }
+    
+    @keyframes card-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    
+    .feature-card:hover {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: rgba(34, 197, 94, 0.6);
+      transform: scale(1.05) translateY(-5px);
+    }
+    
+    .enter-button {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border: none;
+      animation: button-pulse 2s infinite;
+    }
+    
+    @keyframes button-pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 40px rgba(34, 197, 94, 0.7); }
+    }
+    
+    .enter-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer-button 2s infinite;
+    }
+    
+    @keyframes shimmer-button {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .enter-button:hover {
+      transform: scale(1.15);
+      box-shadow: 0 25px 60px rgba(34, 197, 94, 0.5);
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+    }
+    
+    .fade-out {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.5s ease-out;
+    }
+    
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(34, 197, 94, 0.6);
+      border-radius: 50%;
+      animation: particle-float 8s ease-in-out infinite;
+    }
+    
+    @keyframes particle-float {
+      0%, 100% { 
+        transform: translateY(0) rotate(0deg); 
+        opacity: 0.3;
+        box-shadow: 0 0 5px rgba(34, 197, 94, 0.3);
+      }
+      50% { 
+        transform: translateY(-80px) rotate(360deg); 
+        opacity: 0.8;
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
+      }
+    }
+    
+    /* Interactive map preview */
+    .map-preview {
+      position: relative;
+      width: 220px;
+      height: 160px;
+      background: rgba(34, 197, 94, 0.1);
+      border-radius: 12px;
+      border: 2px solid rgba(34, 197, 94, 0.4);
+      margin: 0 auto 25px;
+      overflow: hidden;
+    }
+    
+    .map-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      animation: dot-pulse 2s infinite;
+    }
+    
+    .map-dot-1 { top: 25%; left: 25%; background: #3b82f6; }
+    .map-dot-2 { top: 25%; left: 70%; background: #7c3aed; }
+    .map-dot-3 { top: 70%; left: 25%; background: #f97316; }
+    .map-dot-4 { top: 70%; left: 70%; background: #16a34a; }
+    .map-dot-5 { top: 48%; left: 48%; background: #dc2626; }
+    
+    /* Mini buildings with windows */
+    .mini-building {
+      position: absolute;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    
+    .mini-building .window {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(34, 197, 94, 0.6);
+      border-radius: 1px;
+    }
+    
+    @keyframes dot-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.5; }
+    }
+    
+    /* Stats cards */
+    .stat-card {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.5);
+      transform: translateY(-5px);
+    }
+    
+    /* Loading dots */
+    .loading-dots span {
+      animation: dot-pulse 1.4s infinite both;
+    }
+    
+    .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+    
+    @keyframes dot-pulse {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+    
+    /* Cursor effect */
+    .cursor-glow {
+      width: 30px;
+      height: 30px;
+      background: rgba(34, 197, 94, 0.3);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 1000;
+      transition: transform 0.1s ease;
+      filter: blur(10px);
+    }
+    
+    /* Skip button */
+    .skip-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center text-white overflow-hidden relative cursor-none">
+
+  <!-- Skip to Main button -->
+  <a href="index.html" class="skip-button bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold transition">
+    Skip to Map →
+  </a>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- Animated Background Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particle" style="top: 15%; left: 8%; animation-delay: 0s;"></div>
+  <div class="particle" style="top: 25%; right: 15%; animation-delay: 1s;"></div>
+  <div class="particle" style="bottom: 25%; left: 20%; animation-delay: 2s;"></div>
+  <div class="particle" style="top: 55%; right: 8%; animation-delay: 0.5s;"></div>
+  <div class="particle" style="bottom: 35%; right: 25%; animation-delay: 1.5s;"></div>
+  <div class="particle" style="top: 70%; left: 5%; animation-delay: 2.5s;"></div>
+  <div class="particle" style="top: 40%; left: 40%; animation-delay: 3s;"></div>
+  <div class="particle" style="bottom: 15%; left: 35%; animation-delay: 3.5s;"></div>
+
+  <div class="relative z-10 text-center px-6 max-w-4xl">
+
+    <!-- Interactive Map Preview -->
+    <div class="map-preview" id="mapPreview">
+      <!-- Mini buildings -->
+      <div class="mini-building" style="width: 20px; height: 25px; top: 20%; left: 20%;">
+        <div class="window" style="top: 3px; left: 3px;"></div>
+        <div class="window" style="top: 3px; right: 3px;"></div>
+        <div class="window" style="bottom: 3px; left: 3px;"></div>
+        <div class="window" style="bottom: 3px; right: 3px;"></div>
+      </div>
+      <div class="mini-building" style="width: 25px; height: 20px; top: 20%; left: 65%;">
+        <div class="window" style="top: 3px; left: 3px;"></div>
+        <div class="window" style="top: 3px; right: 3px;"></div>
+        <div class="window" style="bottom: 3px; left: 3px;"></div>
+        <div class="window" style="bottom: 3px; right: 3px;"></div>
+      </div>
+      <div class="mini-building" style="width: 22px; height: 22px; top: 65%; left: 20%;">
+        <div class="window" style="top: 3px; left: 3px;"></div>
+        <div class="window" style="top: 3px; right: 3px;"></div>
+        <div class="window" style="bottom: 3px; left: 3px;"></div>
+        <div class="window" style="bottom: 3px; right: 3px;"></div>
+      </div>
+      <div class="mini-building" style="width: 18px; height: 28px; top: 65%; left: 68%;">
+        <div class="window" style="top: 3px; left: 3px;"></div>
+        <div class="window" style="top: 3px; right: 3px;"></div>
+        <div class="window" style="bottom: 3px; left: 3px;"></div>
+        <div class="window" style="bottom: 3px; right: 3px;"></div>
+      </div>
+      <div class="mini-building" style="width: 30px; height: 18px; top: 45%; left: 42%;">
+        <div class="window" style="top: 3px; left: 5px;"></div>
+        <div class="window" style="top: 3px; right: 5px;"></div>
+        <div class="window" style="bottom: 3px; left: 5px;"></div>
+        <div class="window" style="bottom: 3px; right: 5px;"></div>
+      </div>
+      <!-- Mini trees -->
+      <div style="position: absolute; font-size: 10px; top: 35%; left: 50%;">🌳</div>
+      <div style="position: absolute; font-size: 8px; top: 50%; left: 80%;">🌲</div>
+      <div style="position: absolute; font-size: 9px; bottom: 15%; left: 45%;">🌿</div>
+    </div>
+
+    <!-- Logo/Icon -->
+    <div class="mb-6">
+      <div class="inline-block text-8xl mb-2 hover:scale-110 transition-transform duration-300 cursor-pointer" id="logoIcon">🎓</div>
+    </div>
+
+    <h1 class="text-5xl md:text-7xl font-extrabold mb-6 title-glow welcome-title">
+      Smart Campus Navigator
+    </h1>
+
+    <p class="text-lg md:text-xl text-green-300/80 max-w-2xl mx-auto mb-10 leading-relaxed">
+      Discover buildings. Explore facilities. Navigate smarter.
+      Your interactive digital campus companion awaits.
+    </p>
+
+    <!-- Feature Cards -->
+    <div class="flex justify-center gap-4 flex-wrap mb-12">
+      <div class="feature-card bg-black/40 backdrop-blur-lg p-5 rounded-xl shadow-lg min-w-[140px] cursor-pointer transition-all" onclick="highlightFeature(0)">
+        <div class="text-3xl mb-2">🔍</div>
+        <div class="font-semibold">Smart Search</div>
+        <div class="text-xs text-green-400/70 mt-1">Find any location</div>
+      </div>
+      
+      <div class="feature-card bg-black/40 backdrop-blur-lg p-5 rounded-xl shadow-lg min-w-[140px] cursor-pointer transition-all" onclick="highlightFeature(1)">
+        <div class="text-3xl mb-2">🗺</div>
+        <div class="font-semibold">Interactive Map</div>
+        <div class="text-xs text-green-400/70 mt-1">Explore visually</div>
+      </div>
+      
+      <div class="feature-card bg-black/40 backdrop-blur-lg p-5 rounded-xl shadow-lg min-w-[140px] cursor-pointer transition-all" onclick="highlightFeature(2)">
+        <div class="text-3xl mb-2">📍</div>
+        <div class="font-semibold">Real-time</div>
+        <div class="text-xs text-green-400/70 mt-1">Location tracking</div>
+      </div>
+      
+      <div class="feature-card bg-black/40 backdrop-blur-lg p-5 rounded-xl shadow-lg min-w-[140px] cursor-pointer transition-all" onclick="highlightFeature(3)">
+        <div class="text-3xl mb-2">🏢</div>
+        <div class="font-semibold">Floor Plans</div>
+        <div class="text-xs text-green-400/70 mt-1">Building details</div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="flex justify-center gap-6 mb-10 flex-wrap">
+      <div class="stat-card px-6 py-4 rounded-xl text-center">
+        <div class="text-3xl font-bold text-green-400">5+</div>
+        <div class="text-green-300/60 text-sm">Buildings</div>
+      </div>
+      <div class="stat-card px-6 py-4 rounded-xl text-center">
+        <div class="text-3xl font-bold text-green-400">15+</div>
+        <div class="text-green-300/60 text-sm">Facilities</div>
+      </div>
+      <div class="stat-card px-6 py-4 rounded-xl text-center">
+        <div class="text-3xl font-bold text-green-400">🌳💧</div>
+        <div class="text-green-300/60 text-sm">Nature Spots</div>
+      </div>
+    </div>
+
+    <!-- Main Enter Button -->
+    <button 
+      onclick="enterApp(event)"
+      class="enter-button text-white font-bold px-12 py-6 rounded-full shadow-xl text-xl"
+    >
+      🚪 Enter Campus →
+    </button>
+
+    <!-- Secondary Skip Link -->
+    <div class="mt-6">
+      <a href="index.html" class="text-green-400/60 hover:text-green-300 text-sm underline">
+        Or click here to go directly to map
+      </a>
+    </div>
+
+    <!-- Loading indicator -->
+    <div id="loadingIndicator" class="hidden mt-6">
+      <div class="loading-dots flex justify-center gap-2">
+        <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+        <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+        <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="mt-12 text-green-400/50 text-sm">
+      Press <kbd class="bg-green-900/50 px-2 py-1 rounded border border-green-700/50">Enter</kbd> to continue
+    </div>
+
+  </div>
+
+  <script>
+    // Custom cursor glow effect
+    const cursorGlow = document.getElementById('cursorGlow');
+    
+    document.addEventListener('mousemove', (e) => {
+      cursorGlow.style.left = e.clientX - 15 + 'px';
+      cursorGlow.style.top = e.clientY - 15 + 'px';
+    });
+    
+    // Click ripple effect
+    document.addEventListener('click', function(e) {
+      const ripple = document.createElement('span');
+      ripple.style.cssText = `
+        position: fixed;
+        left: ${e.clientX}px;
+        top: ${e.clientY}px;
+        width: 10px;
+        height: 10px;
+        background: rgba(34, 197, 94, 0.4);
+        border-radius: 50%;
+        transform: scale(0);
+        animation: ripple-effect 0.6s linear;
+        pointer-events: none;
+        z-index: 1000;
+      `;
+      document.body.appendChild(ripple);
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    });
+    
+    // Add ripple animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple-effect {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Parallax effect on mouse move
+    document.addEventListener('mousemove', (e) => {
+      const blobs = document.querySelectorAll('.blob');
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      
+      blobs.forEach((blob, index) => {
+        const speed = (index + 1) * 15;
+        blob.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+      });
+    });
+    
+    // Feature highlight
+    function highlightFeature(index) {
+      const cards = document.querySelectorAll('.feature-card');
+      cards.forEach((card, i) => {
+        if (i === index) {
+          card.style.transform = 'scale(1.1)';
+          card.style.borderColor = 'rgba(34, 197, 94, 0.8)';
+          card.style.background = 'rgba(34, 197, 94, 0.2)';
+        } else {
+          card.style.opacity = '0.5';
+        }
+      });
+      
+      setTimeout(() => {
+        cards.forEach(card => {
+          card.style.transform = '';
+          card.style.borderColor = '';
+          card.style.background = '';
+          card.style.opacity = '';
+        });
+      }, 500);
+    }
+    
+    // Logo click effect
+    const logoIcon = document.getElementById('logoIcon');
+    logoIcon.addEventListener('click', () => {
+      logoIcon.style.transform = 'rotate(360deg) scale(1.2)';
+      setTimeout(() => {
+        logoIcon.style.transform = '';
+      }, 500);
+    });
+    
+    // Map preview animation
+    const mapPreview = document.getElementById('mapPreview');
+    mapPreview.addEventListener('mouseenter', () => {
+      mapPreview.style.transform = 'scale(1.05)';
+      mapPreview.style.borderColor = 'rgba(34, 197, 94, 0.8)';
+    });
+    
+    mapPreview.addEventListener('mouseleave', () => {
+      mapPreview.style.transform = '';
+      mapPreview.style.borderColor = '';
+    });
+    
+    mapPreview.addEventListener('click', () => {
+      enterApp();
+    });
+    
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        enterApp();
+      }
+    });
+    
+    // Enter app function
+    function enterApp(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      
+      const button = document.querySelector('.enter-button');
+      const loading = document.getElementById('loadingIndicator');
+      
+      button.disabled = true;
+      button.innerHTML = '<span class="loading-dots inline-flex"><span class="w-3 h-3 bg-white rounded-full"></span><span class="w-3 h-3 bg-white rounded-full"></span><span class="w-3 h-3 bg-white rounded-full"></span></span>';
+      
+      // Add fade out animation
+      document.body.classList.add('fade-out');
+      
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 800);
+    }
+  </script>
+
+</body>
+</html>

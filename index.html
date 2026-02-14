@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Campus Navigator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* Light Mode - White Background */
+    body.light-mode {
+      background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 50%, #dcfce7 100%) !important;
+    }
+    
+    /* Light mode map */
+    .light-mode .bg-green-200 {
+      background: #90EE90 !important;
+    }
+    
+    /* Tree animation */
+    .tree-cluster {
+      position: absolute;
+      font-size: 24px;
+      animation: treeSway 3s ease-in-out infinite;
+    }
+    
+    .bush {
+      position: absolute;
+      font-size: 18px;
+    }
+    
+    .flower {
+      position: absolute;
+      font-size: 14px;
+      animation: flowerBloom 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 transition duration-500">
+
+  <!-- HEADER -->
+  <header class="bg-white dark:bg-gray-800 shadow px-6 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+      <span class="text-3xl">🎓</span> Smart Campus Navigator
+    </h1>
+
+    <div class="flex items-center gap-3">
+      <a href="welcome.html" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200 mr-2 font-semibold">🏠 Home</a>
+      
+      <!-- Theme Toggle -->
+      <button id="themeToggle" class="flex items-center gap-2 bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText" class="text-sm font-medium">Dark</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- SEARCH + FILTER -->
+  <div class="p-6 bg-white dark:bg-gray-800 shadow">
+    <div class="flex gap-4 flex-wrap">
+      <input id="searchInput" type="text" placeholder="🔍 Search buildings, labs, classrooms..." class="flex-1 p-4 rounded-full border focus:outline-none focus:ring-2 focus:ring-green-500" />
+      
+      <!-- Filter Buttons -->
+      <div class="flex gap-2 items-center">
+        <span class="text-gray-600 dark:text-gray-300 text-sm">Filters:</span>
+        <button class="filter-btn px-3 py-2 rounded-full text-sm bg-gray-200 dark:bg-gray-700 hover:bg-green-500 hover:text-white transition" data-filter="all">All</button>
+        <button class="filter-btn px-3 py-2 rounded-full text-sm bg-gray-200 dark:bg-gray-700 hover:bg-green-500 hover:text-white transition" data-filter="building">Buildings</button>
+        <button class="filter-btn px-3 py-2 rounded-full text-sm bg-gray-200 dark:bg-gray-700 hover:bg-green-500 hover:text-white transition" data-filter="facility">Facilities</button>
+        <button class="filter-btn px-3 py-2 rounded-full text-sm bg-gray-200 dark:bg-gray-700 hover:bg-green-500 hover:text-white transition" data-filter="nature">Nature</button>
+        <button class="filter-btn px-3 py-2 rounded-full text-sm bg-gray-200 dark:bg-gray-700 hover:bg-green-500 hover:text-white transition" data-filter="amenity">Amenities</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="px-6 py-2 bg-gray-50 dark:bg-gray-800 flex gap-4 text-xs flex-wrap">
+    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-500 rounded"></span> Building</span>
+    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-amber-500 rounded"></span> Temple</span>
+    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-orange-500 rounded"></span> Canteen</span>
+    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-gray-500 rounded"></span> Parking</span>
+    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-green-500 rounded-full"></span> Entry/Exit</span>
+    <span class="flex items-center gap-1"><span class="w-3 h-3 bg-purple-500 rounded-full"></span> Restroom</span>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="flex h-[calc(100vh-220px)] relative">
+
+    <!-- MAP AREA -->
+    <div id="mapArea" class="flex-1 relative bg-green-200 dark:bg-green-900 overflow-hidden">
+
+      <!-- Roads -->
+      <div class="road horizontal"></div>
+      <div class="road vertical"></div>
+      
+      <!-- Additional Paths -->
+      <div class="road" style="position: absolute; top: 70%; width: 80%; height: 20px; left: 10%; background: #999;"></div>
+      <div class="road" style="position: absolute; left: 20%; width: 20px; height: 50%; top: 20%; background: #999;"></div>
+
+      <!-- Main Gate -->
+      <div class="main-gate">
+        🚪 MAIN GATE
+        <div id="userDot">📍 You Are Here</div>
+      </div>
+
+      <!-- === 3D BUILDINGS === -->
+      
+      <!-- Bhavans College - Blue 3D -->
+      <div class="building-3d blue-3d" style="top:25%; left:10%; width: 120px;" data-name="Bhavans College" data-type="building">
+        <div class="building-base">
+          <div class="building-top"></div>
+          <div class="building-front">
+            <div class="building-label">Bhavans College</div>
+            <div class="windows-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+            </div>
+          </div>
+          <div class="building-side"></div>
+        </div>
+      </div>
+      
+      <!-- SPIT College - Purple 3D -->
+      <div class="building-3d purple-3d" style="top:25%; left:60%; width: 120px;" data-name="SPIT College" data-type="building">
+        <div class="building-base">
+          <div class="building-top"></div>
+          <div class="building-front">
+            <div class="building-label">SPIT College</div>
+            <div class="windows-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+            </div>
+          </div>
+          <div class="building-side"></div>
+        </div>
+      </div>
+      
+      <!-- SPJIMR - Orange 3D -->
+      <div class="building-3d orange-3d" style="top:65%; left:10%; width: 120px;" data-name="SPJIMR" data-type="building">
+        <div class="building-base">
+          <div class="building-top"></div>
+          <div class="building-front">
+            <div class="building-label">SPJIMR</div>
+            <div class="windows-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="window-3d"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+            </div>
+          </div>
+          <div class="building-side"></div>
+        </div>
+      </div>
+      
+      <!-- SPCE - Green 3D -->
+      <div class="building-3d green-3d" style="top:65%; left:60%; width: 120px;" data-name="SPCE" data-type="building">
+        <div class="building-base">
+          <div class="building-top"></div>
+          <div class="building-front">
+            <div class="building-label">SPCE</div>
+            <div class="windows-grid" style="grid-template-columns: repeat(4, 1fr);">
+              <div class="window-3d lit"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+            </div>
+          </div>
+          <div class="building-side"></div>
+        </div>
+      </div>
+      
+      <!-- Central Facilities - Red 3D -->
+      <div class="building-3d red-3d" style="top:42%; left:38%; width: 130px;" data-name="Central Facilities" data-type="building">
+        <div class="building-base">
+          <div class="building-top"></div>
+          <div class="building-front">
+            <div class="building-label">Central Facilities</div>
+            <div class="windows-grid" style="grid-template-columns: repeat(5, 1fr);">
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+              <div class="window-3d"></div>
+              <div class="window-3d lit"></div>
+            </div>
+          </div>
+          <div class="building-side"></div>
+        </div>
+      </div>
+
+      <!-- === TEMPLE === -->
+      <div class="temple" style="top: 15%; left: 40%;" data-name="Campus Temple" data-type="amenity">
+        <div class="temple-structure">
+          <div class="temple-dome"></div>
+          <div class="temple-base">Temple</div>
+          <div class="temple-pillars">
+            <div class="temple-pillar"></div>
+            <div class="temple-pillar"></div>
+            <div class="temple-pillar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- === CANTEEN === -->
+      <div class="canteen" style="top: 38%; left: 25%;" data-name="Campus Canteen" data-type="amenity">
+        <div class="canteen-building">
+          <div class="canteen-smoke">💨</div>
+          <div class="canteen-smoke">💨</div>
+          <span>Canteen</span>
+        </div>
+      </div>
+
+      <!-- === PARKING AREAS === -->
+      <div class="parking" style="top: 10%; left: 70%;" data-name="Main Parking" data-type="amenity">
+        <div class="parking-area">
+          <div class="parking-icon">🅿️</div>
+          <span>Main Parking</span>
+          <div class="parking-slots">
+            <div class="parking-slot"></div>
+            <div class="parking-slot"></div>
+            <div class="parking-slot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="parking" style="top: 80%; left: 70%;" data-name="Student Parking" data-type="amenity">
+        <div class="parking-area">
+          <div class="parking-icon">🅿️</div>
+          <span>Student Parking</span>
+          <div class="parking-slots">
+            <div class="parking-slot"></div>
+            <div class="parking-slot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- === ENTRY/EXIT POINTS === -->
+      <div class="entry-point" style="top: 5%; left: 45%;" data-name="Main Entrance" data-type="amenity">
+        <div class="entry-gate main" title="Main Entrance">🚪</div>
+      </div>
+
+      <div class="entry-point" style="top: 50%; left: 5%;" data-name="Side Gate A" data-type="amenity">
+        <div class="entry-gate side" title="Side Gate A">🚶</div>
+      </div>
+
+      <div class="entry-point" style="top: 50%; left: 92%;" data-name="Side Gate B" data-type="amenity">
+        <div class="entry-gate side" title="Side Gate B">🚶</div>
+      </div>
+
+      <div class="entry-point" style="top: 92%; left: 45%;" data-name="Emergency Exit" data-type="amenity">
+        <div class="entry-gate emergency" title="Emergency Exit">🚨</div>
+      </div>
+
+      <!-- === GARDEN === -->
+      <div class="garden" style="top:35%; left:50%" data-name="Campus Garden" data-type="nature">
+        Garden
+      </div>
+
+      <!-- === LAKE === -->
+      <div class="lake" style="top:75%; left:40%" data-name="Campus Lake" data-type="nature">
+        Lake
+      </div>
+
+      <!-- === RESTROOMS === -->
+      <div class="restroom" style="top:35%; left:32%" data-name="Restroom - Block A" data-type="facility">
+        <span class="mt-1">Block A</span>
+      </div>
+      
+      <div class="restroom" style="top:50%; left:72%" data-name="Restroom - Block B" data-type="facility">
+        <span class="mt-1">Block B</span>
+      </div>
+      
+      <div class="restroom" style="top:78%; left:25%" data-name="Restroom - Block C" data-type="facility">
+        <span class="mt-1">Block C</span>
+      </div>
+
+      <!-- === FLOOR MARKERS === -->
+      <div class="floor-marker" style="top:45%; left:42%" data-building="Central Facilities" title="View Floors">🏢</div>
+      <div class="floor-marker" style="top:28%; left:13%" data-building="Bhavans College" title="View Floors">🏢</div>
+      <div class="floor-marker" style="top:28%; left:63%" data-building="SPIT College" title="View Floors">🏢</div>
+
+      <!-- === TREES AND NATURE === -->
+      <div class="tree-cluster" style="top: 8%; left: 20%;">🌲</div>
+      <div class="tree-cluster" style="top: 12%; left: 5%; animation-delay: 0.5s;">🌳</div>
+      <div class="tree-cluster" style="top: 15%; left: 32%; animation-delay: 1s;">🌴</div>
+      <div class="tree-cluster" style="top: 5%; left: 55%; animation-delay: 1.5s;">🌲</div>
+      <div class="tree-cluster" style="top: 18%; left: 82%; animation-delay: 0.3s;">🌳</div>
+      
+      <div class="tree-cluster" style="top: 35%; left: 5%; animation-delay: 0.8s;">🌴</div>
+      <div class="tree-cluster" style="top: 40%; left: 80%; animation-delay: 1.2s;">🌲</div>
+      
+      <div class="tree-cluster" style="top: 55%; left: 2%; animation-delay: 0.4s;">🌳</div>
+      <div class="tree-cluster" style="top: 60%; left: 25%; animation-delay: 0.9s;">🌲</div>
+      <div class="tree-cluster" style="top: 75%; left: 5%; animation-delay: 1.4s;">🌴</div>
+      <div class="tree-cluster" style="top: 80%; left: 55%; animation-delay: 0.6s;">🌳</div>
+      <div class="tree-cluster" style="top: 70%; left: 85%; animation-delay: 1.1s;">🌲</div>
+      
+      <div class="tree-cluster" style="top: 90%; left: 15%; animation-delay: 0.7s;">🌴</div>
+      <div class="tree-cluster" style="top: 88%; left: 75%; animation-delay: 1.3s;">🌳</div>
+
+      <div class="bush" style="top: 30%; left: 45%;">🌿</div>
+      <div class="bush" style="top: 50%; left: 25%;">🌱</div>
+      <div class="bush" style="top: 45%; left: 58%;">🌿</div>
+      <div class="bush" style="top: 65%; left: 40%;">🌱</div>
+      
+      <div class="flower" style="top: 28%; left: 28%;">🌸</div>
+      <div class="flower" style="top: 52%; left: 48%; animation-delay: 0.5s;">🌺</div>
+      <div class="flower" style="top: 68%; left: 55%; animation-delay: 1s;">🌷</div>
+      <div class="flower" style="top: 42%; left: 70%; animation-delay: 0.3s;">🌸</div>
+
+      <!-- Route Line -->
+      <div id="routeLine"></div>
+
+    </div>
+
+    <!-- DETAILS PANEL -->
+    <div id="detailsPanel" class="absolute right-0 top-0 h-full w-96 bg-white dark:bg-gray-800 shadow-2xl transform translate-x-full transition duration-500 overflow-y-auto z-50">
+
+      <div class="p-6">
+        <button id="closePanel" class="text-green-500 text-xl float-right hover:text-red-500 transition">✕</button>
+
+        <h2 id="detailTitle" class="text-2xl font-bold mb-4 text-green-600 dark:text-green-400"></h2>
+
+        <!-- Type Badge -->
+        <span id="typeBadge" class="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-4"></span>
+
+        <div id="contentArea">
+          <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Departments</h3>
+          <ul class="list-disc pl-5 mb-4 text-gray-600 dark:text-gray-300" id="departmentsList">
+            <li>Arts</li>
+            <li>Commerce</li>
+            <li>Science</li>
+          </ul>
+
+          <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Facilities</h3>
+          <div class="facilities-grid" id="facilitiesList">
+            <div class="facility-item">📚 Library</div>
+            <div class="facility-item">🎭 Auditorium</div>
+            <div class="facility-item">💻 Computer Lab</div>
+            <div class="facility-item">🍽 Cafeteria</div>
+          </div>
+
+          <!-- Floor Information -->
+          <div id="floorInfo" class="floor-list" style="display: none;">
+            <h3 class="font-semibold mb-3 text-gray-800 dark:text-white">🏢 Building Floors</h3>
+            <div id="floorList"></div>
+          </div>
+
+          <!-- Nature Area Info -->
+          <div id="natureInfo" style="display: none;">
+            <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Features</h3>
+            <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300" id="natureFeatures"></ul>
+          </div>
+
+          <!-- Amenity Info -->
+          <div id="amenityInfo" style="display: none;">
+            <h3 class="font-semibold mb-2 text-gray-800 dark:text-white">Information</h3>
+            <ul class="list-disc pl-5 text-gray-600 dark:text-gray-300" id="amenityFeatures"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
